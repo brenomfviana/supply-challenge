@@ -6,6 +6,7 @@ package main
 // Imports
 import (
 	"fmt"
+	"os"
 	"strconv"
 	"sync"
 	"time"
@@ -19,15 +20,18 @@ type Product struct {
 /**
  * Print log.
  */
-func (p *Product) print(prodCon string, start, end time.Time) {
-	fmt.Println("Produto", p.id, "processado por ", prodCon, " com sucesso.\nInício: ", start, "\nTérmino: ", end, "\n--------------------------------------------------------------")
+func (p *Product) printLog(prodCon string, start, end time.Time) {
+	fmt.Println("Produto", p.id, "processado por ", prodCon, " com sucesso.", "\n",
+		"Time Init: ", fmt.Sprintf("%dH%dm%ds", start.Hour(), start.Minute(), start.Second()), "\n",
+		"Time End:  ", fmt.Sprintf("%dH%dm%ds", end.Hour(), end.Minute(), end.Second()), "\n",
+		"--------------------------------------------------------------")
 }
 
 /**
  * Consume channel items.
  */
 func consumer(id string, prodch <-chan Product, wg *sync.WaitGroup) {
-	// Initial time
+	// Start time
 	var start time.Time
 	// End time
 	var end time.Time
@@ -42,17 +46,16 @@ func consumer(id string, prodch <-chan Product, wg *sync.WaitGroup) {
 			// Leave the loop
 			break
 		}
-		// Get the start time
-		start = time.Now().UTC()
 
+		// Get the start time
+		start = time.Now()
 		// Sleep for 500 milliseconds
 		time.Sleep(500 * time.Millisecond)
-
 		// Get the end time
-		end = time.Now().UTC()
+		end = time.Now()
 
 		// Prints the log
-		prod.print(id, start, end)
+		prod.printLog(id, start, end)
 	}
 
 	// Decrement the waitgroup counter
@@ -69,6 +72,15 @@ func main() {
 	var consumers = 5
 	// Initiate the number of products
 	var products = 10
+
+	/*Leitura de argumentos para numero de consumidores e produtores, respectivamente */
+	if len(os.Args) >= 2 {
+		consumers, _ = strconv.Atoi(os.Args[1])
+	}
+	if len(os.Args) >= 3 {
+		products, _ = strconv.Atoi(os.Args[2])
+	}
+
 	// Create a product channel
 	cs := make(chan Product)
 
