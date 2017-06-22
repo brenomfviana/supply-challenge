@@ -20,12 +20,13 @@ type Product struct {
  * Log.
  */
 func (p *Product) printLog(prodCon string, start, end time.Time) {
-	// Start time in miliseconds
-	var st = start.UnixNano() / int64(time.Millisecond)
-	// End time in miliseconds
-	var et = end.UnixNano() / int64(time.Millisecond)
-	// Print log
-	fmt.Println("Produto", p.id, "processado por ", prodCon, " com sucesso.\nInício: ", st, "\nTérmino: ", et, "\n--------------------------------------------------------------")
+	tStart := fmt.Sprintf("%dH%dm%ds", start.Hour(), start.Minute(), start.Second())
+	tEnd := fmt.Sprintf("%dH%dm%ds", end.Hour(), end.Minute(), end.Second())
+	// fmt.Println("Produto", p.id, "processado por ", prodCon, " com sucesso.\nInício: ", start, "\nTérmino: ", end, "\n--------------------------------------------------------------")
+	fmt.Println("Produto", p.id, "processado por ", prodCon, " com sucesso.")
+	fmt.Println("Time Init: ", tStart)
+	fmt.Println("Time End:  ", tEnd)
+	fmt.Println("--------------------------------------------------------------")
 }
 
 /**
@@ -49,11 +50,11 @@ func consumer(id string, prodch <- chan Product, wg *sync.WaitGroup) {
 		}
 
 		// Get the start time
-		start = time.Now().UTC()
+		start = time.Now()
 		// Sleep for 500 milliseconds
 		time.Sleep(500 * time.Millisecond)
 		// Get the end time
-		end = time.Now().UTC()
+		end = time.Now()
 
 		// Prints the log
 		prod.printLog(id, start, end)
