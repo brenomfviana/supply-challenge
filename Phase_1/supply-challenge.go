@@ -1,5 +1,5 @@
 /*
- *
+ * Phase 1.
  */
 package main
 
@@ -16,15 +16,25 @@ type Product struct {
 	id int
 }
 
-func (p *Product) print(prodCon string, start, end time.Time) {
-	fmt.Println("Produto", p.id, "processado por ", prodCon, " com sucesso.\nInício: ", start, "\nTérmino: ", end, "\n--------------------------------------------------------------")
+/**
+ * Log.
+ */
+func (p *Product) printLog(prodCon string, start, end time.Time) {
+	// Start time in miliseconds
+	var st = start.UnixNano() / int64(time.Millisecond)
+	// End time in miliseconds
+	var et = end.UnixNano() / int64(time.Millisecond)
+	// Print log
+	fmt.Println("Produto", p.id, "processado por ", prodCon, " com sucesso.\nInício: ", st, "\nTérmino: ", et, "\n--------------------------------------------------------------")
 }
 
 /**
  * Consume channel items.
  */
-func consumer(id string, prodch <-chan Product, wg *sync.WaitGroup) {
+func consumer(id string, prodch <- chan Product, wg *sync.WaitGroup) {
+	// Start time
 	var start time.Time
+	// End time
 	var end time.Time
 
 	// Infinite loop
@@ -37,17 +47,16 @@ func consumer(id string, prodch <-chan Product, wg *sync.WaitGroup) {
 			// Leave the loop
 			break
 		}
+
 		// Get the start time
 		start = time.Now().UTC()
-
 		// Sleep for 500 milliseconds
 		time.Sleep(500 * time.Millisecond)
-
 		// Get the end time
 		end = time.Now().UTC()
 
 		// Prints the log
-		prod.print(id, start, end)
+		prod.printLog(id, start, end)
 	}
 
 	// Decrement the waitgroup counter
@@ -74,8 +83,8 @@ func main() {
 	// Create a product channel
 	cs := make(chan Product)
 
-	//inititate the waitgroup with the consumers number
-	//when the count gets to 0 all goroutines blocked are released
+	// Inititate the waitgroup with the consumers number
+	// when the count gets to 0 all goroutines blocked are released
 	wg.Add(consumers)
 
 	// Starts all consumers routines
@@ -89,7 +98,6 @@ func main() {
 	for i := 0; i < products; i++ {
 		var p Product
 		p.id = i
-
 		// Put the product inside the channel
 		cs <- p
 	}
