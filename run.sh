@@ -10,4 +10,4 @@ start=`date +%s%N`/1000000 &&
 end=`date +%s%N`/1000000 &&
 runtime=$(((end-start))) &&
 echo "Time: $runtime milliseconds" &&
-rm "Phase_$1"
+rm -f "Phase_$1" || rm -f "Phase_$1.exe"
