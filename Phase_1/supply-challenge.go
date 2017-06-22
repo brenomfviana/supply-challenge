@@ -1,5 +1,5 @@
 /*
- *
+ * Phase 1.
  */
 package main
 
@@ -16,6 +16,9 @@ type Product struct {
 	id int
 }
 
+/**
+ * Print log.
+ */
 func (p *Product) print(prodCon string, start, end time.Time) {
 	fmt.Println("Produto", p.id, "processado por ", prodCon, " com sucesso.\nInício: ", start, "\nTérmino: ", end, "\n--------------------------------------------------------------")
 }
@@ -24,7 +27,9 @@ func (p *Product) print(prodCon string, start, end time.Time) {
  * Consume channel items.
  */
 func consumer(id string, prodch <-chan Product, wg *sync.WaitGroup) {
+	// Initial time
 	var start time.Time
+	// End time
 	var end time.Time
 
 	// Infinite loop
@@ -55,13 +60,6 @@ func consumer(id string, prodch <-chan Product, wg *sync.WaitGroup) {
 }
 
 /**
- * Produce channel items.
- */
-func producer(ch chan int) {
-	//
-}
-
-/**
  * Start program execution.
  */
 func main() {
@@ -74,8 +72,8 @@ func main() {
 	// Create a product channel
 	cs := make(chan Product)
 
-	//inititate the waitgroup with the consumers number
-	//when the count gets to 0 all goroutines blocked are released
+	// Inititate the waitgroup with the consumers number
+	// when the count gets to 0 all goroutines blocked are released
 	wg.Add(consumers)
 
 	// Starts all consumers routines
@@ -89,7 +87,6 @@ func main() {
 	for i := 0; i < products; i++ {
 		var p Product
 		p.id = i
-
 		// Put the product inside the channel
 		cs <- p
 	}
@@ -100,5 +97,6 @@ func main() {
 	// Make the main wait until the wg counter gets to zero
 	wg.Wait()
 
+	// End message
 	fmt.Printf("Todos os produtos foram consumidos. \n")
 }
