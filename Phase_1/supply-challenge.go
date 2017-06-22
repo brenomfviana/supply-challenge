@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"sync"
 	"time"
+	"os"
 )
 
 // Product definition
@@ -81,6 +82,16 @@ func main() {
 	var consumers = 5
 	// Initiate the number of products
 	var products = 10
+
+	/*Leitura de argumentos para numero de consumidores e produtores, respectivamente */
+  	if len(os.Args) >= 2 {
+  		consumers, _ = strconv.Atoi(os.Args[1])
+  	}
+  	if len(os.Args) >= 3 {
+  		products, _ = strconv.Atoi(os.Args[2])
+  	}
+
+	
 	// Create a product channel
 	cs := make(chan Product)
 

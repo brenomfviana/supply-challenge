@@ -6,7 +6,7 @@ cd "Phase_$1" &&
 go build &&
 echo "Executando..." &&
 start=`date +%s%N`/1000000 &&
-./"Phase_$1" &&
+./"Phase_$1" $2 $3 &&
 end=`date +%s%N`/1000000 &&
 runtime=$(((end-start))) &&
 echo "Time: $runtime milliseconds" &&
