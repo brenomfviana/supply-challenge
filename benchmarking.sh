@@ -13,7 +13,7 @@ declare -A values &&
 instances=(1 5 10 50 100 500 1000) &&
 PRODUTORES=5000 &&
 
-echo "Number of fixed producers: $PRODUTORES" &&
+echo "Instances of Quantity of producers: ${instances[*]}" &&
 echo "Instances of Quantity of consumers: ${instances[*]}" &&
 
 echo "---------------------"
