@@ -9,7 +9,7 @@ import (
 )
 
 // Global constant
-const MAX_VALUE int = 3
+const MAX_VALUE int = 5000
 
 // ------------------TypeDefs------------------------
 
@@ -20,8 +20,15 @@ type Product struct {
 	id float32
 }
 
+// func (p *Product) print(prodCon string, start, end time.Time) {
+// 	fmt.Println("Produto", p.id, "processado por ", prodCon, " com sucesso.\nInício: ", start, "\nTérmino: ", end, "\n--------------------------------------------------------------")
+// }
+
 func (p *Product) print(prodCon string, start, end time.Time) {
-	//fmt.Println("Produto", p.id, "processado por ", prodCon, " com sucesso.\nInício: ", start, "\nTérmino: ", end, "\n--------------------------------------------------------------")
+	fmt.Println("Produto", p.id, "processado por ", prodCon, " com sucesso.", "\n",
+		"Time Init: ", fmt.Sprintf("%dH%dm%ds", start.Hour(), start.Minute(), start.Second()), "\n",
+		"Time End:  ", fmt.Sprintf("%dH%dm%ds", end.Hour(), end.Minute(), end.Second()), "\n",
+		"--------------------------------------------------------------")
 }
 
 /**
@@ -31,42 +38,6 @@ type Counter struct {
 	val    int
 	finish bool
 	closed bool
-	mux    sync.Mutex
-}
-
-// Returns true if the channel has already being closed
-func (c *Counter) isClosed() bool {
-	c.mux.Lock()
-	var bo bool
-
-	// if it's being called for the first time
-	if !c.closed {
-		c.closed = true
-		bo = false
-	} else {
-		bo = true
-	}
-
-	defer c.mux.Unlock()
-	return bo
-}
-
-// Returns true if the counter reached the max value
-func (c *Counter) isFinish() bool {
-	c.mux.Lock()
-
-	if c.val < MAX_VALUE-1 {
-		c.val++
-		c.finish = false
-		c.closed = false
-	} else if c.val == MAX_VALUE-1 {
-		c.val++
-		c.closed = false
-	} else {
-		c.finish = true
-	}
-	defer c.mux.Unlock()
-	return c.finish
 }
 
 /**
@@ -78,15 +49,33 @@ type FIFO struct {
 }
 
 // Put the product inside the channel and print the log
-func (f *FIFO) putProduct(pId string, start time.Time, prod Product, prodch chan Product) {
+func (f *FIFO) putProduct(pId string, start time.Time, prod Product, prodch chan Product, c *Counter) bool {
 	f.muxPut.Lock()
 
-	prodch <- prod
-	end := time.Now().UTC()
-	prod.print(pId, start, end)
-	fmt.Println("PRODUTO ", prod.id, " PRODUZIDO")
+	//if the number of products is smaller than the max value
+	if c.val < MAX_VALUE {
+		c.val++
+		c.closed = false
+		c.finish = false
 
-	f.muxPut.Unlock()
+		prodch <- prod
+		end := time.Now().UTC()
+		prod.print(pId, start, end)
+
+	} else {
+		// The counter has finished
+		c.finish = true
+
+		// Check if another productor hasn't close the channel yet
+		if !c.closed {
+			c.closed = true
+			// Close the channel
+			close(prodch)
+		}
+	}
+
+	defer f.muxPut.Unlock()
+	return c.finish
 }
 
 // Remove the product of the channel and return the boolean
@@ -100,7 +89,6 @@ func (f *FIFO) removeProduct(cId string, start time.Time, prodch <-chan Product)
 	if open {
 		end := time.Now().UTC()
 		prod.print(cId, start, end)
-		fmt.Println("PRODUTO ", prod.id, " CONSUMIDO")
 	}
 
 	defer f.muxRemove.Unlock()
@@ -150,24 +138,15 @@ func producer(id int, prodch chan Product, wg *sync.WaitGroup, counter *Counter,
 		// Create the product
 		var prod Product
 		//id.count
-		prod.id = float32(id) + (float32(count) / 100)
+		prod.id = float32(id) + (float32(count) / 1000)
 
-		// Check if the total products hasn't already reached the maximum value
-		if !counter.isFinish() {
-			fmt.Println("produtor "+strconv.Itoa(id), "entrou no counter.")
-			// Put the product inside the channel
-			fifo.putProduct("produtor "+strconv.Itoa(id), start, prod, prodch)
-		} else {
+		finish := fifo.putProduct("produtor "+strconv.Itoa(id), start, prod, prodch, counter)
+
+		// If the counter finished
+		if finish {
 			break
 		}
 		count++
-	}
-
-	// Check if another productor hasn't close the channel yet
-	if !counter.isClosed() {
-		// Close the channel
-		fmt.Println("THE CHANNEL IS CLOSED")
-		close(prodch)
 	}
 
 	// Decrement the waitgroup counter
