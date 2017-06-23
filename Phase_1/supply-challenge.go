@@ -71,14 +71,14 @@ func main() {
 	// Initiate the number of consumers
 	var consumers = 5
 	// Initiate the number of products
-	var products = 10
+	var products = 5000
 
 	/*Leitura de argumentos para numero de consumidores e produtores, respectivamente */
 	if len(os.Args) >= 2 {
 		consumers, _ = strconv.Atoi(os.Args[1])
 	}
 	if len(os.Args) >= 3 {
-		products, _ = strconv.Atoi(os.Args[2])
+		// products, _ = strconv.Atoi(os.Args[2])
 	}
 
 	// Create a product channel

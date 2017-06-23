@@ -11,7 +11,7 @@ echo "---------------------"
 echo "Initial information..." &&
 declare -A values &&
 instances=(1 5 10 50 100 500 1000) &&
-PRODUTORES=200 &&
+PRODUTORES=5000 &&
 
 echo "Number of fixed producers: $PRODUTORES" &&
 echo "Instances of Quantity of consumers: ${instances[*]}" &&
@@ -23,7 +23,7 @@ for ((i=0;i<7;i++)) do
 	echo -n "Instance ${instances[$i]}:	"
 	for ((j=0;j<10;j++)) do
 		start=`date +%s%N`/1000000  &&
-		./"Phase_$1" ${instances[$i]} $PRODUTORES  >> saida.txt &&
+		./"Phase_$1" ${instances[$i]} ${instances[$i]}  >> saida.txt &&
 		end=`date +%s%N`/1000000 &&
 		runtime=$(((end-start))) &&
 		values[$i,$j]=$runtime

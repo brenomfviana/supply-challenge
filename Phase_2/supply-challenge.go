@@ -3,6 +3,7 @@ package main
 // Imports
 import (
 	"fmt"
+	"os"
 	"strconv"
 	"sync"
 	"time"
@@ -16,8 +17,15 @@ type Product struct {
 	id float32
 }
 
+// func (p *Product) print(prodCon string, start, end time.Time) {
+// 	fmt.Println("Produto", p.id, "processado por ", prodCon, " com sucesso.\nInício: ", start, "\nTérmino: ", end, "\n--------------------------------------------------------------")
+// }
+
 func (p *Product) print(prodCon string, start, end time.Time) {
-	fmt.Println("Produto", p.id, "processado por ", prodCon, " com sucesso.\nInício: ", start, "\nTérmino: ", end, "\n--------------------------------------------------------------")
+	fmt.Println("Produto", p.id, "processado por ", prodCon, " com sucesso.", "\n",
+		"Time Init: ", fmt.Sprintf("%dH%dm%ds", start.Hour(), start.Minute(), start.Second()), "\n",
+		"Time End:  ", fmt.Sprintf("%dH%dm%ds", end.Hour(), end.Minute(), end.Second()), "\n",
+		"--------------------------------------------------------------")
 }
 
 // Counter definition
@@ -72,7 +80,7 @@ func consumer(id string, prodch <-chan Product, wg *sync.WaitGroup) {
 
 	// Infinite loop
 	for {
-		start = time.Now().UTC()
+		start = time.Now()
 		// Get the product and a boolean that verifies if the channel is open
 		prod, open := <-prodch
 
@@ -83,7 +91,7 @@ func consumer(id string, prodch <-chan Product, wg *sync.WaitGroup) {
 		}
 
 		time.Sleep(500 * time.Millisecond)
-		end = time.Now().UTC()
+		end = time.Now()
 
 		prod.print(id, start, end)
 	}
@@ -145,8 +153,17 @@ func main() {
 	var count Counter
 	// Initiate the number of consumers
 	var consumers = 5
-	// Initiate the number of producers
-	var producers = 5
+	// Initiate the number of products
+	var producers = 10
+
+	/*Leitura de argumentos para numero de consumidores e produtores, respectivamente */
+	if len(os.Args) >= 2 {
+		consumers, _ = strconv.Atoi(os.Args[1])
+	}
+	if len(os.Args) >= 3 {
+		producers, _ = strconv.Atoi(os.Args[2])
+	}
+
 	// Create a product channel
 	cs := make(chan Product, 5000)
 
