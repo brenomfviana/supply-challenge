@@ -81,6 +81,7 @@ func consumer(id string, prodch <-chan Product, wg *sync.WaitGroup) {
 			// Leave the loop
 			break
 		}
+
 		time.Sleep(500 * time.Millisecond)
 		end = time.Now().UTC()
 
@@ -108,7 +109,7 @@ func producer(id int, prodch chan Product, wg *sync.WaitGroup, counter *Counter)
 		// Create the product
 		var prod Product
 		//id.count
-		prod.id = float32(id) + float32(count)/100
+		prod.id = float32(id) + (float32(count) / 100)
 
 		// Check if the total products hasn't already reached the maximum value
 		if !counter.isFinish() {
