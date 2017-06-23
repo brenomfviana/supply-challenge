@@ -3,6 +3,7 @@ package main
 // Imports
 import (
 	"fmt"
+	"os"
 	"strconv"
 	"sync"
 	"time"
@@ -106,7 +107,7 @@ func consumer(id string, prodch <-chan Product, wg *sync.WaitGroup, fifo *FIFO) 
 	// Infinite loop
 	for {
 		start = time.Now().UTC()
-		time.Sleep(500 * time.Millisecond)
+		time.Sleep(50 * time.Millisecond)
 
 		// Get the boolean that verifies if the channel is open
 		open := fifo.removeProduct(id, start, prodch)
@@ -133,7 +134,7 @@ func producer(id int, prodch chan Product, wg *sync.WaitGroup, counter *Counter,
 	// Infinite loop
 	for {
 		start = time.Now().UTC()
-		time.Sleep(500 * time.Millisecond)
+		time.Sleep(50 * time.Millisecond)
 
 		// Create the product
 		var prod Product
@@ -169,6 +170,15 @@ func main() {
 	var consumers = 5
 	// Initiate the number of producers
 	var producers = 5
+
+	/*Leitura de argumentos para numero de consumidores e produtores, respectivamente */
+	if len(os.Args) >= 2 {
+		consumers, _ = strconv.Atoi(os.Args[1])
+	}
+	if len(os.Args) >= 3 {
+		producers, _ = strconv.Atoi(os.Args[2])
+	}
+	
 	// Create a product channel
 	cs := make(chan Product, 5000)
 
