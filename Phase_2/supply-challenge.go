@@ -10,7 +10,7 @@ import (
 )
 
 // Global constant
-const MAX_VALUE int = 10
+const MAX_VALUE int = 5000
 
 // Product definition
 type Product struct {
@@ -90,7 +90,7 @@ func consumer(id string, prodch <-chan Product, wg *sync.WaitGroup) {
 			break
 		}
 
-		time.Sleep(500 * time.Millisecond)
+		time.Sleep(100 * time.Millisecond)
 		end = time.Now()
 
 		prod.print(id, start, end)
@@ -112,7 +112,7 @@ func producer(id int, prodch chan Product, wg *sync.WaitGroup, counter *Counter)
 	// Infinite loop
 	for {
 		start = time.Now().UTC()
-		time.Sleep(500 * time.Millisecond)
+		time.Sleep(100 * time.Millisecond)
 
 		// Create the product
 		var prod Product
