@@ -59,8 +59,8 @@ To run all instances for a specific phase run the ```benchmarking.sh``` script.
 
 	./benchmarking.sh <phase-id>
 
-## Members
+## Team
 
-- Breno Maurício de Freitas Viana ([GitHub](https://github.com/brenov))
-- Felipe Barbalho Rocha ([GitHub](https://github.com/Barbalho12))
-- Patrícia Pontes Cruz ([GitHub](https://github.com/Pekorishia))
+[![Breno Viana](https://avatars2.githubusercontent.com/u/17532418?v=3&u=46e9d47c495080fd08dc336d0767f76a57a7644b&s=100)](https://github.com/brenov) | [![Breno Viana](https://avatars2.githubusercontent.com/u/8813353?v=3&s=100)](https://github.com/Barbalho12) | [<img src="https://avatars2.githubusercontent.com/u/17392686?v=3&s=400" width="100"/>](https://github.com/Pekorishia)
+---|---|---
+[Breno Viana](https://github.com/brenov) | [Felipe Barbalho](https://github.com/Barbalho12) | [Patrícia Cruz](https://github.com/Pekorishia)
