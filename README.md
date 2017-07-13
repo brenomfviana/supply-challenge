@@ -52,12 +52,16 @@ After the implementation activity, retry the experiment performed in the previou
 
 To run only one instance for a specific phase run the ```run.sh``` script.
 
-	/* No need to enter the number of producers for the first step. */
-	./run.sh <phase-id> <number-of-consumers> <number-of-producers>
+```bash
+# No need to enter the number of producers for the first step.
+./run.sh <phase-id> <number-of-consumers> <number-of-producers>
+```
 
 To run all instances for a specific phase run the ```benchmarking.sh``` script.
 
-	./benchmarking.sh <phase-id>
+```bash
+./benchmarking.sh <phase-id>
+```
 
 ## Team
 
