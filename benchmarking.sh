@@ -2,8 +2,8 @@
 
 echo "Initializing Benchmarking..." &&
 echo "---------------------"
-cd "Phase_$1" &&
-echo "Compiling Phase_$1..." &&
+cd "phase$1" &&
+echo "Compiling phase$1..." &&
 go build &&
 
 
@@ -23,18 +23,18 @@ for ((i=0;i<7;i++)) do
 	echo -n "Instance ${instances[$i]}:	"
 	for ((j=0;j<10;j++)) do
 		start=`date +%s%N`/1000000  &&
-		./"Phase_$1" ${instances[$i]} ${instances[$i]}  >> saida.txt &&
+		./"phase$1" ${instances[$i]} ${instances[$i]}  >> saida.txt &&
 		end=`date +%s%N`/1000000 &&
 		runtime=$(((end-start))) &&
 		values[$i,$j]=$runtime
-		
+
 		echo -n "$j "
 	done
 	echo ""
 done
 
 rm -f saida.txt
-rm -f "Phase_$1" || rm -f "Phase_$1.exe"
+rm -f "phase$1" || rm -f "phase$1.exe"
 
 echo "---------------------"
 echo "Collected data in milliseconds"
@@ -57,7 +57,7 @@ echo "Inst	Average	Greater	Smaller	Variance"
 for ((i=0;i<7;i++)) do
 	menor[$i]=${values[$i,0]}
 	maior[$i]=${values[$i,0]}
-	
+
 	for ((j=0;j<10;j++)) do
     	medio[$i]=$(( ${medio[$i]} + ${values[$i,$j]} ))
 
@@ -79,6 +79,6 @@ for ((i=0;i<7;i++)) do
     done
     variancia=$(( $variancia / ${instances[$i]} ))
     desvioP[$i]=$variancia
-    
-    echo "${instances[$i]}	${medio[$i]}	${maior[$i]}	${menor[$i]}	${desvioP[$i]}" 
+
+    echo "${instances[$i]}	${medio[$i]}	${maior[$i]}	${menor[$i]}	${desvioP[$i]}"
 done
