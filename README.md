@@ -69,6 +69,6 @@ To run all instances for a specific phase run the ```benchmarking.sh``` script.
 
 ## Team
 
-[<img src="https://avatars2.githubusercontent.com/u/17532418?v=3&s=400" width="100"/>](https://github.com/brenov) | [<img src="https://avatars2.githubusercontent.com/u/8813353?v=3&s=400" width="100"/>](https://github.com/Barbalho12) | [<img src="https://avatars2.githubusercontent.com/u/17392686?v=3&s=400" width="100"/>](https://github.com/Pekorishia)
+[<img src="https://avatars2.githubusercontent.com/u/17532418?v=3&s=400" width="100"/>](https://github.com/brenomfviana) | [<img src="https://avatars2.githubusercontent.com/u/8813353?v=3&s=400" width="100"/>](https://github.com/Barbalho12) | [<img src="https://avatars2.githubusercontent.com/u/17392686?v=3&s=400" width="100"/>](https://github.com/Pekorishia)
 ---|---|---
-[Breno Viana](https://github.com/brenov) | [Felipe Barbalho](https://github.com/Barbalho12) | [Patrícia Cruz](https://github.com/Pekorishia)
+[Breno Viana](https://github.com/brenomfviana) | [Felipe Barbalho](https://github.com/Barbalho12) | [Patrícia Cruz](https://github.com/Pekorishia)
